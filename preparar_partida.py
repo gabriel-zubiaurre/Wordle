@@ -47,9 +47,9 @@ def iniciar_sesion(jugador):
 
     print(f"Bienvenido a tu primer juego de Wordle, {jugador}!")
     print("Vamos a crear una contraseña para tu usuario.")
-    print("Requisitos: mínimo 8 caracteres, alfanumérica, al menos una mayúscula y un carácter especial.")
+    print("Requisitos: entre 8 y 64 caracteres, alfanumérica, al menos una mayúscula y un carácter especial.")
 
-    patron = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$'
+    patron = r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,64}$'
 
     while True:
         contrasena = input("Elegí una contraseña: ").strip()
@@ -76,7 +76,7 @@ def seleccionar_idioma():
     if banco_palabras is None:
         return None
 
-    idiomas_disponibles = sorted(banco_palabras.keys())
+    idiomas_disponibles = list(banco_palabras.keys())
 
     if not idiomas_disponibles:
         print("No hay idiomas disponibles en el banco de palabras.")
@@ -94,18 +94,22 @@ def seleccionar_idioma():
         print("Idioma no válido. Intentá de nuevo.")
 
 
-def seleccionar_longitud():
+def seleccionar_longitud(idioma):
 
     banco_palabras = cargar_palabras()
     if banco_palabras is None:
         return None
 
-    longitudes_disponibles = sorted(
-        {longitud for palabras_por_longitud in banco_palabras.values() for longitud in palabras_por_longitud.keys()}
-    )
+    if idioma not in banco_palabras:
+        print("No hay palabras disponibles para el idioma seleccionado.")
+        return None
+
+    palabras_por_longitud = banco_palabras[idioma]
+
+    longitudes_disponibles = set(palabras_por_longitud.keys())
 
     if not longitudes_disponibles:
-        print("No hay longitudes disponibles en el banco de palabras.")
+        print("No hay longitudes disponibles en el banco de palabras para este idioma.")
         return None
 
     print("Longitudes disponibles:")
@@ -159,7 +163,13 @@ def elegir_palabra(idioma, longitud, jugador):
 def preparar_partida(jugador):
 
     idioma = seleccionar_idioma()
-    longitud = seleccionar_longitud()
+    if idioma is None:
+        return None, None, None, None
+
+    longitud = seleccionar_longitud(idioma)
+    if longitud is None:
+        return idioma, None, None, None
+
     palabra = elegir_palabra(idioma, longitud, jugador)
 
     if longitud is None:
