@@ -137,10 +137,12 @@ def elegir_palabra(idioma, longitud, jugador):
     excluir_palabras = cargar_jugadores_palabras()
     excluir_palabras_jugador = excluir_palabras.get(jugador, set())
 
-    palabras_disponibles = [
-        palabra for palabra in banco_palabras_idioma_longitud
-        if palabra not in excluir_palabras_jugador
-    ]
+    palabras_disponibles = list(
+        filter(
+            lambda palabra: palabra not in excluir_palabras_jugador,
+            banco_palabras_idioma_longitud
+        )
+    )
 
     if palabras_disponibles:
         palabras = palabras_disponibles

@@ -1,4 +1,6 @@
-from archivos import cargar_jugadores_estadisticas
+from archivos import(
+    cargar_jugadores_estadisticas,
+    cargar_jugadores_palabras)
 from preparar_partida import definir_jugador
 
 def estadisticas():
@@ -110,3 +112,23 @@ def estadisticas_jugador():
         )
     else:
         print(f"No hay registros para {jugador}.")
+
+    jugadores_palabras = cargar_jugadores_palabras()
+    palabras_jugador = jugadores_palabras.get(jugador, set())
+
+    if palabras_jugador:
+        print("\nPalabras jugadas:")
+        lista_ordenada = sorted(palabras_jugador)
+        mostrar_palabras(lista_ordenada)
+        print(f"Total: {len(lista_ordenada)} palabra(s)")
+    else:
+        print("\nEste jugador todavía no tiene palabras jugadas registradas.")
+
+def mostrar_palabras(lista_palabras, indice=0):
+
+    if indice >= len(lista_palabras):
+        return
+
+    print(f"- {lista_palabras[indice]}")
+
+    mostrar_palabras(lista_palabras, indice + 1)
