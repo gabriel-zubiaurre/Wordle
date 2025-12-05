@@ -72,8 +72,8 @@ def colorear_intento(intento, palabra):
     fondo, acierto = evaluar_intento(intento, palabra)
 
     letras_fondo = [
-        f"{colores[color]} {letra} {colores['reset']}"
-        for color, letra in zip(fondo, intento)
+        f"{colores[fondo[i]]} {intento[i]} {colores['reset']}"
+        for i in range(len(intento))
     ]
 
     resultado = " ".join(letras_fondo)
@@ -124,11 +124,11 @@ def jugar_partida(jugador):
         patron_intento = rf"[A-Za-zÁÉÍÓÚáéíóúÑñÇç]{{{longitud}}}"
 
         while True:
-            entrada = input(
+            intento = input(
                 f"Intento {intento_actual + 1}/{intentos_disponibles} - Ingrese una palabra: "
             ).strip()
 
-            if not re.fullmatch(patron_intento, entrada):
+            if not re.fullmatch(patron_intento, intento):
                 print(
                     f"La palabra debe tener exactamente {longitud} letras "
                     f"y solo puede contener letras (sin espacios ni números)."
@@ -137,7 +137,7 @@ def jugar_partida(jugador):
 
             break
 
-        resultado, acierto = colorear_intento(entrada, palabra)
+        resultado, acierto = colorear_intento(intento, palabra)
         historial.append(resultado)
         imprimir_historial(historial)
 
